@@ -1,51 +1,21 @@
 {
-  "version": "14.0.2",
-  "name": "twemoji",
-  "license": [
-    "MIT",
-    "CC-BY-4.0"
-  ],
-  "description": "A Unicode standard based way to implement emoji across all platforms.",
-  "homepage": "https://github.com/twitter/twemoji",
-  "keywords": [
-    "emoji",
-    "DOM",
-    "parser",
-    "images",
-    "retina",
-    "Twitter",
-    "unicode"
-  ],
-  "devDependencies": {
-    "npm-run-all": "^4.1.5",
-    "phantomjs-prebuilt": "^2.1.16",
-    "uglify-js": "2.6.2"
+  "name": "noto",
+  "version": "1.0.0",
+  "description": "![Noto](https://substackcdn.com/image/fetch/w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2Fab4b4276-9bb0-42a6-a675-510fcb6055df_1940x1088.png) # Noto Emoji Noto Emoji (Stands for No Tofu) is an open source (Open Font License 1.1) emoji library that provides standard Unicode emoji support and tools for working with them including:",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
   },
-  "author": {
-    "name": "Twitter, Inc.",
-    "web": "https://github.com/twitter/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/twitter/twemoji.git"
-  },
-  "main": "./dist/twemoji.npm.js",
-  "module": "./dist/twemoji.esm.js",
-  "unpkg": "./dist/twemoji.min.js",
   "scripts": {
-    "build": "./scripts/build.js",
-    "deploy": "./scripts/deploy.sh gh-pages",
-    "test": "phantomjs ./src/test/testrunner.js",
-    "prepublishOnly": "run-s build test deploy"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "ts-node main.ts"
   },
-  "dependencies": {
-    "fs-extra": "^8.0.1",
-    "jsonfile": "^5.0.0",
-    "twemoji-parser": "14.0.0",
-    "universalify": "^0.1.2"
-  },
-  "files": [
-    "dist/twemoji*.js",
-    "index.d.ts"
-  ]
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  }
 }
