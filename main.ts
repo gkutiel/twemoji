@@ -37,7 +37,6 @@ if (module === require.main) {
 
     // Build file content OUTSIDE the loop
     let fileContent = `import { ReactElement } from "react";
-import 'server-only'    
 
 export const emojiMap: Record<string, ReactElement> = {
 `
