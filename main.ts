@@ -4,7 +4,7 @@ import path from "path"
 
 if (module === require.main) {
     const folder = path.resolve(__dirname, "./assets/svg")
-    const outFile = path.resolve(__dirname, "./EmojiMap.tsx")
+    const outFile = path.resolve(__dirname, "./emojis.ts")
     const emojiList = JSON.parse(readFileSync('emojis.json', 'utf8')) as string[]
 
     // Dictionary to dedupe emojis
@@ -23,22 +23,22 @@ if (module === require.main) {
             svg = svg.replace(/<svg[^>]*>/, "").replace(/<\/svg>/, "").trim()
 
             // Convert attributes to JSX-compatible names
-            svg = svg.replace(/fill-opacity=/g, "fillOpacity=")
-            svg = svg.replace(/stroke-width=/g, "strokeWidth=")
-            svg = svg.replace(/fill-rule=/g, "fillRule=")
-            svg = svg.replace(/clip-rule=/g, "clipRule=")
+            // svg = svg.replace(/fill-opacity=/g, "fillOpacity=")
+            // svg = svg.replace(/stroke-width=/g, "strokeWidth=")
+            // svg = svg.replace(/fill-rule=/g, "fillRule=")
+            // svg = svg.replace(/clip-rule=/g, "clipRule=")
 
             // Store in dict (duplicates automatically overwritten)
-            uniqueMap[emoji] = `<g>${svg}</g>`
+            uniqueMap[emoji] = `'<g>${svg}</g>'`
         } catch (error) {
             console.warn(`Warning: Could not process emoji "${emoji}": ${error}`)
         }
     })
 
     // Build file content OUTSIDE the loop
-    let fileContent = `import { ReactElement } from "react";
+    let fileContent = `
 
-export const emojiMap: Record<string, ReactElement> = {
+export const emojiMap: Record<string, string> = {
 `
 
     for (const [emoji, jsx] of Object.entries(uniqueMap)) {
@@ -50,5 +50,5 @@ export const emojiMap: Record<string, ReactElement> = {
     // Write file once
     fs.writeFileSync(outFile, fileContent, "utf8")
 
-    console.log("emojiMap.tsx generated!")
+    console.log("emojis.ts generated!", Object.keys(uniqueMap).length)
 }
