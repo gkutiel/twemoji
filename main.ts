@@ -38,14 +38,14 @@ if (module === require.main) {
     // Build file content OUTSIDE the loop
     let fileContent = `
 
-export const emojiMap: Record<string, string> = {
+export const emojiMap = {
 `
 
     for (const [emoji, jsx] of Object.entries(uniqueMap)) {
         fileContent += `  "${emoji}": ${jsx},\n`
     }
 
-    fileContent += "};\n"
+    fileContent += "} as const;\n"
 
     // Write file once
     fs.writeFileSync(outFile, fileContent, "utf8")
