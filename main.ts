@@ -1,37 +1,39 @@
-import fs, { readFileSync } from "fs"
+import assert from "assert"
+import fs from "fs"
 import path from "path"
 // Example emojis you want to include
 
 if (module === require.main) {
     const folder = path.resolve(__dirname, "./assets/svg")
     const outFile = path.resolve(__dirname, "./emojis.ts")
-    const emojiList = JSON.parse(readFileSync('emojis.json', 'utf8')) as string[]
 
     // Dictionary to dedupe emojis
     const uniqueMap: Record<string, string> = {}
 
-    function fileName(emoji: string) {
-        return `${emoji.codePointAt(0)?.toString(16)}.svg`
-    }
+    // Read all files from the folder
+    const files = fs.readdirSync(folder)
 
-    emojiList.forEach((emoji) => {
+    files.forEach((file) => {
+        // Match files like "2b50.svg" or "1f1fb-1f1e8.svg"
+        const match = file.match(/^([0-9a-f]+(?:-[0-9a-f]+)*)\.svg$/i)
+        if (!match) return
+
+        const hexCodes = match[1].split('-')
+        const codePoints = hexCodes.map(hex => parseInt(hex, 16))
+        const emoji = String.fromCodePoint(...codePoints)
+
         try {
-            const filePath = path.join(folder, fileName(emoji))
+            const filePath = path.join(folder, file)
             let svg = fs.readFileSync(filePath, "utf8")
 
             // Remove outer <svg> wrapper
             svg = svg.replace(/<svg[^>]*>/, "").replace(/<\/svg>/, "").trim()
 
-            // Convert attributes to JSX-compatible names
-            // svg = svg.replace(/fill-opacity=/g, "fillOpacity=")
-            // svg = svg.replace(/stroke-width=/g, "strokeWidth=")
-            // svg = svg.replace(/fill-rule=/g, "fillRule=")
-            // svg = svg.replace(/clip-rule=/g, "clipRule=")
-
             // Store in dict (duplicates automatically overwritten)
+            assert(!uniqueMap[emoji], `Duplicate emoji detected: ${emoji} from file ${file}`)
             uniqueMap[emoji] = `'<g>${svg}</g>'`
         } catch (error) {
-            console.warn(`Warning: Could not process emoji "${emoji}": ${error}`)
+            console.warn(`Warning: Could not process file "${file}": ${error}`)
         }
     })
 
@@ -49,6 +51,7 @@ export const emojiMap = {
 
     // Write file once
     fs.writeFileSync(outFile, fileContent, "utf8")
+    fs.writeFileSync('emojis.txt', Object.keys(uniqueMap).join('\n'), "utf8")
 
     console.log("emojis.ts generated!", Object.keys(uniqueMap).length)
 }
